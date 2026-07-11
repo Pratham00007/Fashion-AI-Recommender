@@ -18,6 +18,8 @@ def recommend_from_image(
 
         body_shape=body_shape,
 
+        body_profile=body_features["bodyProfile"],
+
         top_k=20
 
     )

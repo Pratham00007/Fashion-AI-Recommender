@@ -1,76 +1,70 @@
-"""
-Body shape styling rules.
-
-Each body shape defines:
-1. Recommended article types
-2. Article types to avoid
-"""
-
 BODY_SHAPE_RULES = {
 
     "Rectangle": {
 
-        "recommended": [
+        "Topwear": {
 
-            "Shirts",
-            "Jackets",
-            "Blazers",
-            "Sweatshirts",
-            "Hoodies",
-            "Tshirts",
-            "Kurtas",
-            "Waistcoat",
+            "Shirts": 100,
+            "Jackets": 95,
+            "Blazers": 95,
+            "Sweatshirts": 90,
+            "Tshirts": 85,
+            "Kurtas": 80
 
-            "Jeans",
-            "Trousers",
-            "Chinos",
-            "Track Pants"
-        ],
+        },
 
-        "avoid": [
+        "Bottomwear": {
 
-            "Oversized Tshirts"
-        ]
-    },
+            "Jeans": 95,
+            "Trousers": 90,
+            "Track Pants": 85,
+            "Shorts": 70
 
-    "Inverted Triangle": {
+        }
 
-        "recommended": [
-
-            "Jeans",
-            "Track Pants",
-            "Cargo Pants",
-            "Trousers",
-
-            "Polo Tshirts",
-            "Simple Shirts",
-            "Henley Tshirts"
-        ],
-
-        "avoid": [
-
-            "Blazers",
-            "Shoulder Jackets"
-        ]
     },
 
     "Pear": {
 
-        "recommended": [
+        "Topwear": {
 
-            "Blazers",
-            "Structured Jackets",
-            "Shirts",
-            "Polo Tshirts",
+            "Blazers": 100,
+            "Jackets": 95,
+            "Shirts": 90,
+            "Tshirts": 85,
+            "Sweatshirts": 80
 
-            "Straight Jeans",
-            "Regular Trousers"
-        ],
+        },
 
-        "avoid": [
+        "Bottomwear": {
 
-            "Skinny Jeans"
-        ]
+            "Jeans": 75,
+            "Track Pants": 70,
+            "Trousers": 80
+
+        }
+
+    },
+
+    "Inverted Triangle": {
+
+        "Topwear": {
+
+            "Shirts": 90,
+            "Tshirts": 85,
+            "Sweatshirts": 80
+
+        },
+
+        "Bottomwear": {
+
+            "Cargo Pants": 100,
+            "Track Pants": 95,
+            "Jeans": 90,
+            "Trousers": 90
+
+        }
+
     }
 
 }

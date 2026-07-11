@@ -1,57 +1,115 @@
 from services.recommendation.style_rules import BODY_SHAPE_RULES
+from services.recommendation.filters import valid_product
 
 
 def calculate_score(product, user):
 
-    score = 0
-
-    #############################
-    # Gender
-    #############################
-
-    if product.get("gender", "").lower() == user["gender"].lower():
-        score += 50
-    else:
+    if not valid_product(product):
         return 0
 
-    #############################
-    # Body Shape
-    #############################
+    gender = product.get("gender", "")
 
-    body_shape = user["bodyShape"]
+    if gender.lower() not in [
+        user["gender"].lower(),
+        "unisex"
+    ]:
+        return 0
 
-    rules = BODY_SHAPE_RULES.get(body_shape)
+    score = 50
 
-    if rules is None:
-        return score
+    #######################################
+    # BODY SHAPE
+    #######################################
 
-    article = product.get("articleType", "")
+    body = BODY_SHAPE_RULES.get(
+        user["bodyShape"],
+        {}
+    )
 
     sub = product.get("subCategory", "")
 
-    if sub in rules["recommended"]:
+    article = product.get("articleType", "")
 
-        if article in rules["recommended"][sub]:
-            score += 40
+    if sub in body:
+        score += body[sub].get(article, 10)
 
-    #############################
+    #######################################
+    # BUILD
+    #######################################
+
+    build = user["bodyProfile"]["build"]
+
+    if build == "Slim":
+
+        if article in [
+            "Jackets",
+            "Blazers",
+            "Sweatshirts"
+        ]:
+            score += 20
+
+    elif build == "Heavy":
+
+        if article in [
+            "Shirts",
+            "Tshirts"
+        ]:
+            score += 20
+
+    #######################################
+    # SHOULDERS
+    #######################################
+
+    shoulders = user["bodyProfile"]["shoulders"]
+
+    if shoulders == "Broad":
+
+        if article in [
+            "Tshirts",
+            "Shirts"
+        ]:
+            score += 15
+
+    elif shoulders == "Narrow":
+
+        if article in [
+            "Blazers",
+            "Jackets"
+        ]:
+            score += 15
+
+    #######################################
+    # WAIST
+    #######################################
+
+    waist = user["bodyProfile"]["waist"]
+
+    if waist == "Wide":
+
+        if article in [
+            "Track Pants",
+            "Jeans"
+        ]:
+            score += 15
+
+    elif waist == "Slim":
+
+        if article in [
+            "Trousers",
+            "Jeans"
+        ]:
+            score += 10
+
+    #######################################
     # Usage
-    #############################
+    #######################################
 
     usage = product.get("usage", "")
 
-    if usage in [
-        "Casual",
-        "Ethnic",
-        "Formal"
-    ]:
-        score += 5
+    if usage == "Casual":
+        score += 10
 
-    #############################
-    # Season
-    #############################
-
-    if product.get("season") != "":
+    elif usage == "Formal":
         score += 5
 
     return score

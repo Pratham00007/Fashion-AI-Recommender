@@ -7,6 +7,7 @@ from services.analysis.segmentation import segment_person
 from services.analysis.measurement import measure_body
 from services.recommendation.ai_recommender import recommend_from_image
 from services.analysis.gender import detect_gender
+from services.recommendation.body_profile import build_body_profile
 FACE_MODEL = "models/face_landmarker.task"
 POSE_MODEL = "models/pose_landmarker_lite.task"
 
@@ -62,14 +63,15 @@ def analyze_image(image_path):
         measurements = measure_body(mask)
     else:
         measurements = None
-
+    body_profile = build_body_profile(measurements)
     recommendations = recommend_from_image(
     image_path,
     {
-        "bodyShape": body_shape,
-        "measurements": measurements,
-        "gender": gender
-    }
+    "bodyShape": body_shape,
+    "measurements": measurements,
+    "bodyProfile": body_profile,
+    "gender": gender
+}
 )
 
     pose_landmarker.close()
@@ -79,7 +81,7 @@ def analyze_image(image_path):
     "bodyDetected": bool(body_detected),
     "bodyLandmarks": int(landmark_count),
     "bodyShape": str(body_shape),
-    "gender": gender,
-    "measurements": measurements,
+    "gender": gender,"measurements": measurements,
+    "bodyProfile": body_profile,
     "recommendations": recommendations
 }

@@ -24,15 +24,21 @@ from services.recommendation.scorer import calculate_score
 
 
 def search_similar(
-    image_path,
-    gender,
-    body_shape,
-    top_k=20
+        image_path,
+        gender,
+        body_shape,
+        body_profile,
+        top_k=20
 ):
 
     user = {
+
         "gender": gender,
-        "bodyShape": body_shape
+
+        "bodyShape": body_shape,
+
+        "bodyProfile": body_profile
+
     }
 
     ranked = []
@@ -44,20 +50,25 @@ def search_similar(
             user
         )
 
-        if score == 0:
+        if score <= 0:
             continue
 
         p = product.copy()
 
-        p["image"] = f"{p['id']}.jpg"
-
         p["score"] = score
+
+        p["image"] = f"{p['id']}.jpg"
 
         ranked.append(p)
 
-    ranked.sort(
+    ranked = sorted(
+
+        ranked,
+
         key=lambda x: x["score"],
+
         reverse=True
+
     )
 
     return ranked[:top_k]
