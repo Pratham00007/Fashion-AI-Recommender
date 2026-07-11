@@ -6,6 +6,7 @@ from mediapipe.tasks.python import vision
 from services.analysis.segmentation import segment_person
 from services.analysis.measurement import measure_body
 from services.recommendation.ai_recommender import recommend_from_image
+from services.analysis.gender import detect_gender
 FACE_MODEL = "models/face_landmarker.task"
 POSE_MODEL = "models/pose_landmarker_lite.task"
 
@@ -54,6 +55,7 @@ def analyze_image(image_path):
         landmark_count = 0
         body_shape = "Unknown"
 
+    gender = detect_gender(image_path)
     mask = segment_person(image_path)
 
     if mask is not None:
@@ -65,7 +67,8 @@ def analyze_image(image_path):
     image_path,
     {
         "bodyShape": body_shape,
-        "measurements": measurements
+        "measurements": measurements,
+        "gender": gender
     }
 )
 
@@ -76,6 +79,7 @@ def analyze_image(image_path):
     "bodyDetected": bool(body_detected),
     "bodyLandmarks": int(landmark_count),
     "bodyShape": str(body_shape),
+    "gender": gender,
     "measurements": measurements,
     "recommendations": recommendations
 }

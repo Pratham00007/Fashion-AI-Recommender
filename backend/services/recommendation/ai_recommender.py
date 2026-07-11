@@ -11,8 +11,14 @@ def recommend_from_image(
         "Unknown"
     )
 
+    gender = body_features.get(
+        "gender",
+        None
+    )
+
     products = search_similar(
-        image_path,
+        image_path=image_path,
+        gender=gender,
         top_k=20
     )
 

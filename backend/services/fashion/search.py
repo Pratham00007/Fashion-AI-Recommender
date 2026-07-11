@@ -50,7 +50,11 @@ def encode_query_image(image_path):
     return embedding.cpu().numpy().astype("float32")
 
 
-def search_similar(image_path, top_k=10):
+def search_similar(
+    image_path,
+    gender=None,
+    top_k=10
+):
 
     query = encode_query_image(image_path)
 
@@ -69,6 +73,13 @@ def search_similar(image_path, top_k=10):
             continue
 
         product = metadata[idx].copy()
+
+        # Filter products according to detected gender
+        if gender is not None:
+            product_gender = product.get("gender", "").strip().lower()
+
+            if product_gender != gender.lower():
+                continue
 
         product["image"] = f"{product['id']}.jpg"
 
