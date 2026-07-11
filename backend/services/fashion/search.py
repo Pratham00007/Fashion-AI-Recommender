@@ -20,71 +20,44 @@ index = faiss.read_index(str(INDEX_PATH))
 with open(META_PATH, "rb") as f:
     metadata = pickle.load(f)
 
-
-def encode_query_image(image_path):
-
-    image = Image.open(image_path).convert("RGB")
-
-    inputs = processor(
-        images=image,
-        return_tensors="pt"
-    )
-
-    inputs = {
-        k: v.to(device)
-        for k, v in inputs.items()
-    }
-
-    with torch.no_grad():
-
-        outputs = model.vision_model(**inputs)
-
-        embedding = outputs.pooler_output
-
-        embedding = torch.nn.functional.normalize(
-            embedding,
-            p=2,
-            dim=1
-        )
-
-    return embedding.cpu().numpy().astype("float32")
+from services.recommendation.scorer import calculate_score
 
 
 def search_similar(
     image_path,
-    gender=None,
-    top_k=10
+    gender,
+    body_shape,
+    top_k=20
 ):
 
-    query = encode_query_image(image_path)
+    user = {
+        "gender": gender,
+        "bodyShape": body_shape
+    }
 
-    faiss.normalize_L2(query)
+    ranked = []
 
-    scores, ids = index.search(
-        query,
-        top_k
-    )
+    for product in metadata:
 
-    results = []
+        score = calculate_score(
+            product,
+            user
+        )
 
-    for score, idx in zip(scores[0], ids[0]):
-
-        if idx == -1:
+        if score == 0:
             continue
 
-        product = metadata[idx].copy()
+        p = product.copy()
 
-        # Filter products according to detected gender
-        if gender is not None:
-            product_gender = product.get("gender", "").strip().lower()
+        p["image"] = f"{p['id']}.jpg"
 
-            if product_gender != gender.lower():
-                continue
+        p["score"] = score
 
-        product["image"] = f"{product['id']}.jpg"
+        ranked.append(p)
 
-        product["score"] = float(score)
+    ranked.sort(
+        key=lambda x: x["score"],
+        reverse=True
+    )
 
-        results.append(product)
-
-    return results
+    return ranked[:top_k]

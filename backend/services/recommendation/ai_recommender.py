@@ -6,20 +6,20 @@ def recommend_from_image(
     body_features,
 ):
 
-    body_shape = body_features.get(
-        "bodyShape",
-        "Unknown"
-    )
+    gender = body_features["gender"]
 
-    gender = body_features.get(
-        "gender",
-        None
-    )
+    body_shape = body_features["bodyShape"]
 
     products = search_similar(
+
         image_path=image_path,
+
         gender=gender,
+
+        body_shape=body_shape,
+
         top_k=20
+
     )
 
     recommendations = []
@@ -58,10 +58,7 @@ def recommend_from_image(
             "image":
             f"http://127.0.0.1:8001/images/{p['id']}.jpg",
 
-            "score": round(
-                p["score"],
-                3
-            )
+            "score": p["score"]
 
         })
 
