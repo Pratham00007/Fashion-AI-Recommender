@@ -3,7 +3,15 @@
 A modern, AI-powered fashion recommendation web application that analyzes a person's body features from a full-body image and recommends clothing that suits them—not based on what they are already wearing, but based on their body profile.
 
 ---
+## Video
 
+
+
+https://github.com/user-attachments/assets/a449ab8f-91cb-4779-b211-a6253b8ed647
+
+
+
+---
 ## Features
 
 * Full-body image upload
